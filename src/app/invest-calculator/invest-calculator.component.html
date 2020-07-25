@@ -1,7 +1,10 @@
-<h3 class="text-uppercase">Invest calculator</h3>
+<!-- Header of web app -->
+<h3 class="text-uppercase text-success">Invest calculator</h3>
 
-<form (ngSubmit)="calculate()" class="card p-3">
+<!-- Form to calculate invested values -->
+<form (ngSubmit)="calculate()" class="card p-3 bg-custom">
 
+    <!-- Mutual Fund Name & Scheme name section-->
     <div class="row py-2">
         <div class="col">
             <label class="medium font-weight-bold">Mutual Fund Name</label>
@@ -11,15 +14,20 @@
         </div>
     </div>
 
+    <!-- Invested value section -->
     <div class="row py-2" [formGroup]="investmentForm">
         <div class="col">
             <label class="small font-weight-bold">Amount</label>
+
+            <!-- Invested amount input -->
             <div class="input-group">
                 <input type="number" class="form-control" name="amount" [(ngModel)]="amount" formControlName="amount" required>
                 <div class="input-group-append">
                     <span class="input-group-text">Rs</span>
                 </div>
             </div>
+
+            <!-- Error message when value is empty -->
             <div>
                 <span class="text-danger" *ngIf="(investmentFormControl.amount.dirty && investmentFormControl.amount.touched || submitted) && investmentFormControl.amount.errors?.required">
                     Amount is required.
@@ -28,13 +36,18 @@
         </div>
     </div>
 
+    <!-- Start date and End date section -->
     <div [formGroup]="investmentForm" class="row py-2">
         <div class="col-md">
             <label class="small font-weight-bold">Start Date</label>
+
+            <!-- Datepicker for start date -->
             <div class="input-group">
                 <input [minDate]="{year: 2015, month: 4, day: 1}" type="text" class="form-control" placeholder="yyyy-mm-dd" name="startDate"
                 ngbDatepicker #start="ngbDatepicker" (click)="start.toggle()" [(ngModel)]="startDate" formControlName="startDate" required>
             </div>
+
+            <!-- Error message when start date is empty -->
             <div>
                 <span class="text-danger" *ngIf="(investmentFormControl.startDate.dirty && investmentFormControl.startDate.touched || submitted) && investmentFormControl.startDate.errors?.required">
                     Start date is required.
@@ -44,10 +57,14 @@
         
         <div class="col-md">
             <label class="small font-weight-bold">End Date</label>
+
+            <!-- Datepicker for end date -->
             <div class="input-group">
                 <input [minDate]="{year: 2015, month: 4, day: 1}" type="text" class="form-control" placeholder="yyyy-mm-dd" name="endDate"
                 ngbDatepicker #end="ngbDatepicker" (click)="end.toggle()" [(ngModel)]="endDate" formControlName="endDate" required>
             </div>
+
+            <!-- Error message when end date is empty -->
             <div>
                 <span class="text-danger" *ngIf="(investmentFormControl.endDate.dirty && investmentFormControl.endDate.touched || submitted) && investmentFormControl.endDate.errors?.required">
                     End date is required.
@@ -56,25 +73,29 @@
         </div>
     </div>
 
+    <!-- Error message when start date should be less than end date -->
     <div class="col">
         <span class="text-danger" *ngIf="submitted && startDate > endDate">
             Start date should be less than end date.
         </span>
     </div>
 
+    <!-- Error message when end date should not be future date. -->
     <div class="col">
-        <span class="text-danger" *ngIf="submitted && endDate > today">
+        <span class="text-danger" *ngIf="endDate > today">
             End date should not be future date.
         </span>
     </div>
 
+    <!-- Calculate button -->
     <div class="btn-block py-3">
         <button class="btn btn-success" type="submit">Calculate</button>
     </div>
 
-    <div class="py-2" *ngIf="this.returns">
+    <!-- Summary for investment section  -->
+    <div class="py-2" *ngIf="this.returns && endDate > startDate && today > endDate && investmentForm.valid">
         <div class="col">
-          <h4 class="lead">You have {{ this.units }} units and your Investment as of date {{ this.endDate | date }} is worth Rs. {{ this.amount + this.returns }}</h4>
+          <h4 class="lead">You have {{ this.units }} units and your Investment as on date {{ this.endDate | date }} is worth Rs. {{ this.amount + this.returns | number:'1.2-2' }}</h4>
         </div>
     </div>
 
